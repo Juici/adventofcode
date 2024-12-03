@@ -1,0 +1,13 @@
+[workspace]
+members = ["2015/*"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+publish = false
+
+[workspace.dependencies]
+anyhow = "1.0"
+
+regex = "1.11"
+rustc-hash = "2.1"
