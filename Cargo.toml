@@ -8,6 +8,8 @@ publish = false
 
 [workspace.dependencies]
 anyhow = "1.0"
-
 regex = "1.11"
 rustc-hash = "2.1"
+
+itoa = "1.0"
+md-5 = "0.10.6"
