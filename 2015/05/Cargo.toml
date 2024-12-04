@@ -1,0 +1,8 @@
+[package]
+name = "aoc-2015-05"
+
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+rustc-hash.workspace = true
