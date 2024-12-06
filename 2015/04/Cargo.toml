@@ -7,3 +7,4 @@ publish.workspace = true
 [dependencies]
 itoa.workspace = true
 md-5.workspace = true
+rayon.workspace = true
