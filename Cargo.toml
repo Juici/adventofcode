@@ -16,6 +16,8 @@ petgraph = { version = "0.6.5", features = ["rayon"] }
 itoa = "1.0"
 md-5 = "0.10.6"
 
-# MD-5 bruteforcing is slow on opt-level=0
+# Events where opt-level=3 is necessary for timely execution.
 [profile.dev.package.aoc-2015-04]
+opt-level = 3
+[profile.dev.package.aoc-2024-06]
 opt-level = 3
