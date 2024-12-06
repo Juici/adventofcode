@@ -12,6 +12,7 @@ rayon = "1.10"
 regex = "1.11"
 rustc-hash = "2.1"
 
+petgraph = { version = "0.6.5", features = ["rayon"] }
 itoa = "1.0"
 md-5 = "0.10.6"
 
