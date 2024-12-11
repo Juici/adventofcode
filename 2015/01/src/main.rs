@@ -1,14 +1,14 @@
 const INPUT: &str = include_str!("./input");
 
 fn main() {
-    part1();
-    part2();
+    println!("part 1: {}", part1(INPUT));
+    println!("part 2: {}", part2(INPUT));
 }
 
-fn part1() {
+fn part1(input: &str) -> i32 {
     let mut floor = 0;
 
-    for c in INPUT.chars() {
+    for c in input.chars() {
         match c {
             '(' => floor += 1,
             ')' => floor -= 1,
@@ -16,31 +16,25 @@ fn part1() {
         }
     }
 
-    println!("part1: {floor}");
+    floor
 }
 
-fn part2() {
+fn part2(input: &str) -> usize {
     let mut floor = 0;
 
-    let mut pos = None;
-
-    for (i, c) in INPUT.char_indices() {
+    for (i, c) in input.char_indices() {
         match c {
             '(' => floor += 1,
             ')' => {
                 floor -= 1;
 
                 if floor == -1 {
-                    pos = Some(i + 1);
-                    break;
+                    return i + 1;
                 }
             }
             _ => {}
         }
     }
 
-    match pos {
-        Some(pos) => println!("part2: {pos}"),
-        None => println!("part2: not found"),
-    }
+    panic!("not found");
 }

@@ -65,15 +65,15 @@ impl IndexMut<(usize, usize)> for Lights {
 }
 
 fn main() -> Result<()> {
-    let instructions = parse_input().context("failed to parse input")?;
+    let instructions = parse_input(INPUT).context("failed to parse input")?;
 
-    part1(&instructions);
-    part2(&instructions);
+    println!("part 1: {}", part1(&instructions));
+    println!("part 2: {}", part2(&instructions));
 
     Ok(())
 }
 
-fn part1(instructions: &[Instruction]) {
+fn part1(instructions: &[Instruction]) -> usize {
     let mut lights = Lights::default();
 
     for instr in instructions {
@@ -89,12 +89,10 @@ fn part1(instructions: &[Instruction]) {
         }
     }
 
-    let lit = lights.iter().filter(|(_, state)| *state != 0).count();
-
-    println!("part1: {lit}");
+    lights.iter().filter(|(_, state)| *state != 0).count()
 }
 
-fn part2(instructions: &[Instruction]) {
+fn part2(instructions: &[Instruction]) -> u32 {
     let mut lights = Lights::default();
 
     for instr in instructions {
@@ -109,13 +107,11 @@ fn part2(instructions: &[Instruction]) {
         }
     }
 
-    let brightness = lights.iter().map(|(_, state)| state as u32).sum::<u32>();
-
-    println!("part2: {brightness}");
+    lights.iter().map(|(_, state)| state as u32).sum::<u32>()
 }
 
-fn parse_input() -> Result<Vec<Instruction>> {
-    INPUT
+fn parse_input(input: &str) -> Result<Vec<Instruction>> {
+    input
         .lines()
         .enumerate()
         .map(|(i, line)| {

@@ -4,44 +4,42 @@ use rayon::iter::{IndexedParallelIterator, IntoParallelIterator, ParallelIterato
 const INPUT: &str = "iwrupvqb";
 
 fn main() {
-    part1();
-    part2();
+    println!("part 1: {}", part1(INPUT));
+    println!("part 2: {}", part2(INPUT));
 }
 
-fn part1() {
-    let n = (1..u32::MAX).into_par_iter().by_exponential_blocks().find_first(|&n| {
-        let mut hasher = Md5::new();
+fn part1(input: &str) -> u32 {
+    (1..u32::MAX)
+        .into_par_iter()
+        .by_exponential_blocks()
+        .find_first(|&n| {
+            let mut hasher = Md5::new();
 
-        hasher.update(INPUT);
-        hasher.update(itoa::Buffer::new().format(n));
+            hasher.update(input);
+            hasher.update(itoa::Buffer::new().format(n));
 
-        let digest = hasher.finalize();
-        let digest = digest.as_slice();
+            let digest = hasher.finalize();
+            let digest = digest.as_slice();
 
-        matches!(digest, [0, 0, 0x0..0x10, ..])
-    });
-
-    match n {
-        Some(n) => println!("part1: {n}"),
-        None => println!("part1: not found"),
-    }
+            matches!(digest, [0, 0, 0x0..0x10, ..])
+        })
+        .expect("not found")
 }
 
-fn part2() {
-    let n = (1..u32::MAX).into_par_iter().by_exponential_blocks().find_first(|&n| {
-        let mut hasher = Md5::new();
+fn part2(input: &str) -> u32 {
+    (1..u32::MAX)
+        .into_par_iter()
+        .by_exponential_blocks()
+        .find_first(|&n| {
+            let mut hasher = Md5::new();
 
-        hasher.update(INPUT);
-        hasher.update(itoa::Buffer::new().format(n));
+            hasher.update(input);
+            hasher.update(itoa::Buffer::new().format(n));
 
-        let digest = hasher.finalize();
-        let digest = digest.as_slice();
+            let digest = hasher.finalize();
+            let digest = digest.as_slice();
 
-        matches!(digest, [0, 0, 0, ..])
-    });
-
-    match n {
-        Some(n) => println!("part2: {n}"),
-        None => println!("part2: not found"),
-    }
+            matches!(digest, [0, 0, 0, ..])
+        })
+        .expect("not found")
 }

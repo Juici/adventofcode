@@ -4,11 +4,11 @@ use std::mem;
 const INPUT: &str = include_str!("./input");
 
 fn main() {
-    part1();
-    part2();
+    println!("part 1: {}", part1(INPUT));
+    println!("part 2: {}", part2(INPUT));
 }
 
-fn part1() {
+fn part1(input: &str) -> usize {
     let mut houses = HashSet::new();
 
     let mut x = 0;
@@ -16,7 +16,7 @@ fn part1() {
 
     houses.insert((x, y));
 
-    for c in INPUT.chars() {
+    for c in input.chars() {
         match c {
             '^' => y += 1,
             'v' => y -= 1,
@@ -28,10 +28,10 @@ fn part1() {
         houses.insert((x, y));
     }
 
-    println!("part1: {}", houses.len());
+    houses.len()
 }
 
-fn part2() {
+fn part2(input: &str) -> usize {
     let mut houses = HashSet::new();
 
     let mut pos1 = (0, 0);
@@ -39,7 +39,7 @@ fn part2() {
 
     houses.insert(pos2);
 
-    for c in INPUT.chars() {
+    for c in input.chars() {
         match c {
             '^' => pos1.1 += 1,
             'v' => pos1.1 -= 1,
@@ -53,5 +53,5 @@ fn part2() {
         mem::swap(&mut pos1, &mut pos2);
     }
 
-    println!("part2: {}", houses.len());
+    houses.len()
 }

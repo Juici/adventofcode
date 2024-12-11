@@ -11,15 +11,15 @@ struct Box {
 }
 
 fn main() -> Result<()> {
-    let boxes = parse_input().context("failed to parse input")?;
+    let boxes = parse_input(INPUT).context("failed to parse input")?;
 
-    part1(&boxes);
-    part2(&boxes);
+    println!("part 1: {}", part1(&boxes));
+    println!("part 2: {}", part2(&boxes));
 
     Ok(())
 }
 
-fn part1(boxes: &[Box]) {
+fn part1(boxes: &[Box]) -> u32 {
     let mut sum = 0;
 
     for Box { l, w, h } in boxes {
@@ -32,10 +32,10 @@ fn part1(boxes: &[Box]) {
         sum += 2 * lw + 2 * wh + 2 * hl + smallest;
     }
 
-    println!("part1: {sum}");
+    sum
 }
 
-fn part2(boxes: &[Box]) {
+fn part2(boxes: &[Box]) -> u32 {
     let mut sum = 0;
 
     for Box { l, w, h } in boxes {
@@ -56,11 +56,11 @@ fn part2(boxes: &[Box]) {
         sum += perim + vol;
     }
 
-    println!("part2: {sum}");
+    sum
 }
 
-fn parse_input() -> Result<Vec<Box>> {
-    INPUT
+fn parse_input(input: &str) -> Result<Vec<Box>> {
+    input
         .lines()
         .map(|line| {
             let mut split = line.split('x');

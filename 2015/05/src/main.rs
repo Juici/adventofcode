@@ -7,12 +7,12 @@ use std::collections::HashMap;
 const INPUT: &str = include_str!("./input");
 
 fn main() {
-    part1();
-    part2();
+    println!("part 1: {}", part1(INPUT));
+    println!("part 2: {}", part2(INPUT));
 }
 
-fn part1() {
-    let count = INPUT
+fn part1(input: &str) -> usize {
+    input
         .lines()
         .filter(|line| {
             fn is_nice_vowels(s: &str) -> bool {
@@ -66,12 +66,10 @@ fn part1() {
 
             true
         })
-        .count();
-
-    println!("part1: {count}");
+        .count()
 }
 
-fn part2() {
+fn part2(input: &str) -> usize {
     fn chunk_appears_twice(s: &str) -> bool {
         let mut map = HashMap::new();
 
@@ -95,10 +93,5 @@ fn part2() {
         s.chars().map_windows(|[a, _, b]| a == b).any(|b| b)
     }
 
-    let count = INPUT
-        .lines()
-        .filter(|line| chunk_appears_twice(line) && has_repeated_letter_xyx(line))
-        .count();
-
-    println!("part2: {count}");
+    input.lines().filter(|line| chunk_appears_twice(line) && has_repeated_letter_xyx(line)).count()
 }
