@@ -49,6 +49,8 @@ struct Map {
     nodes: Vec<Vec<u8>>,
 }
 
+type Graph = DiGraphMap<Location, ()>;
+
 impl Map {
     fn nodes(&self) -> impl Iterator<Item = Node> + '_ {
         self.nodes.iter().enumerate().flat_map(|(y, row)| {
@@ -74,41 +76,44 @@ impl Map {
     fn trail_tails(&self) -> impl Iterator<Item = Node> + '_ {
         self.nodes().filter(|node| node.height == 9)
     }
-}
 
-type Graph = DiGraphMap<Location, ()>;
+    fn build_graph(&self) -> Graph {
+        let mut graph = Graph::new();
+
+        for node in self.nodes() {
+            graph.add_node(node.location);
+
+            let adjacent = Direction::DIRECTIONS
+                .into_iter()
+                .filter_map(|dir| node.location.adjacent(dir))
+                .filter_map(|loc| self.get(loc));
+
+            for adj in adjacent {
+                if adj.height.checked_sub(1) == Some(node.height) {
+                    graph.add_edge(node.location, adj.location, ());
+                }
+            }
+        }
+
+        graph
+    }
+}
 
 fn main() -> Result<()> {
     let map = parse_input(INPUT).context("failed to parse input")?;
 
-    let mut graph = Graph::new();
+    let graph = map.build_graph();
 
-    for node in map.nodes() {
-        graph.add_node(node.location);
-
-        let adjacent = Direction::DIRECTIONS
-            .into_iter()
-            .filter_map(|dir| node.location.adjacent(dir))
-            .filter_map(|loc| map.get(loc));
-
-        for adj in adjacent {
-            if adj.height.checked_sub(1) == Some(node.height) {
-                graph.add_edge(node.location, adj.location, ());
-            }
-        }
-    }
-
-    part1(&map, &graph);
-    part2(&map, &graph);
+    println!("part 1: {}", part1(&map, &graph));
+    println!("part 2: {}", part2(&map, &graph));
 
     Ok(())
 }
 
-fn part1(map: &Map, graph: &Graph) {
+fn part1(map: &Map, graph: &Graph) -> usize {
     let mut space = DfsSpace::new(&graph);
 
-    let sum = map
-        .trail_heads()
+    map.trail_heads()
         .map(move |head| {
             map.trail_tails()
                 .filter(|tail| {
@@ -121,12 +126,10 @@ fn part1(map: &Map, graph: &Graph) {
                 })
                 .count()
         })
-        .sum::<usize>();
-
-    println!("part1: {sum}");
+        .sum()
 }
 
-fn part2(map: &Map, graph: &Graph) {
+fn part2(map: &Map, graph: &Graph) -> usize {
     struct Marker;
 
     impl<A> FromIterator<A> for Marker {
@@ -135,8 +138,7 @@ fn part2(map: &Map, graph: &Graph) {
         }
     }
 
-    let sum = map
-        .trail_heads()
+    map.trail_heads()
         .par_bridge()
         .map(|head| {
             map.trail_tails()
@@ -153,9 +155,7 @@ fn part2(map: &Map, graph: &Graph) {
                 })
                 .sum::<usize>()
         })
-        .sum::<usize>();
-
-    println!("part2: {sum}");
+        .sum()
 }
 
 fn parse_input(input: &str) -> Result<Map> {

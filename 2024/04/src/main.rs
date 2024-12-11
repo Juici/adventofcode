@@ -4,16 +4,16 @@
 const INPUT: &str = include_str!("./input");
 
 fn main() {
-    part1();
-    part2();
+    println!("part 1: {}", part1(INPUT));
+    println!("part 2: {}", part2(INPUT));
 }
 
-fn part1() {
+fn part1(input: &str) -> usize {
     fn is_xmas_window(window: &[char; 4]) -> bool {
         window == &['X', 'M', 'A', 'S'] || window == &['S', 'A', 'M', 'X']
     }
 
-    let lines = INPUT.lines().map(|s| s.chars().collect::<Vec<_>>()).collect::<Vec<_>>();
+    let lines = input.lines().map(|s| s.chars().collect::<Vec<_>>()).collect::<Vec<_>>();
 
     let width = lines[0].len();
     let height = lines.len();
@@ -71,18 +71,17 @@ fn part1() {
         }))
         .sum::<usize>();
 
-    println!("part1: {count}");
+    count
 }
 
-fn part2() {
-    let lines = INPUT.lines().map(|s| s.chars().collect::<Vec<_>>()).collect::<Vec<_>>();
+fn part2(input: &str) -> usize {
+    let lines = input.lines().map(|s| s.chars().collect::<Vec<_>>()).collect::<Vec<_>>();
 
     let width = lines[0].len();
     let height = lines.len();
 
     if height < 3 || width < 3 {
-        println!("part2: 0");
-        return;
+        return 0;
     }
 
     let mut count = 0;
@@ -113,5 +112,5 @@ fn part2() {
         }
     }
 
-    println!("part2: {count}");
+    count
 }

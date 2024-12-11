@@ -20,13 +20,13 @@ impl Block {
 fn main() -> Result<()> {
     let blocks = parse_input(INPUT).context("failed to parse input")?;
 
-    part1(&blocks);
-    part2(&blocks);
+    println!("part 1: {}", part1(&blocks));
+    println!("part 2: {}", part2(&blocks));
 
     Ok(())
 }
 
-fn part1(blocks: &[Block]) {
+fn part1(blocks: &[Block]) -> usize {
     let mut blocks = blocks.to_vec();
 
     let mut start = 0;
@@ -56,13 +56,10 @@ fn part1(blocks: &[Block]) {
         start += 1;
     }
 
-    let checksum =
-        blocks.iter().enumerate().filter_map(|(pos, b)| b.id().map(|id| pos * id)).sum::<usize>();
-
-    println!("part1: {checksum}");
+    checksum(&blocks)
 }
 
-fn part2(blocks: &[Block]) {
+fn part2(blocks: &[Block]) -> usize {
     let mut blocks = blocks.to_vec();
 
     let files = {
@@ -128,10 +125,11 @@ fn part2(blocks: &[Block]) {
         empty[..file.len()].swap_with_slice(file);
     }
 
-    let checksum =
-        blocks.iter().enumerate().filter_map(|(pos, b)| b.id().map(|id| pos * id)).sum::<usize>();
+    checksum(&blocks)
+}
 
-    println!("part2: {checksum}");
+fn checksum(blocks: &[Block]) -> usize {
+    blocks.iter().enumerate().filter_map(|(pos, b)| b.id().map(|id| pos * id)).sum()
 }
 
 fn parse_input(input: &str) -> Result<Vec<Block>> {

@@ -13,13 +13,13 @@ const INPUT: &str = include_str!("./input");
 fn main() -> Result<()> {
     let map = INPUT.parse::<Map>()?;
 
-    part1(&map);
-    part2(&map);
+    println!("part 1: {}", part1(&map));
+    println!("part 2: {}", part2(&map));
 
     Ok(())
 }
 
-fn part1(map: &Map) {
+fn part1(map: &Map) -> usize {
     let mut nodes = HashMap::<char, HashSet<Vec2>>::new();
 
     for node in map.nodes() {
@@ -50,10 +50,10 @@ fn part1(map: &Map) {
         }
     }
 
-    println!("part1: {}", antinodes.len());
+    antinodes.len()
 }
 
-fn part2(map: &Map) {
+fn part2(map: &Map) -> usize {
     let mut nodes = HashMap::<char, HashSet<Vec2>>::new();
 
     for node in map.nodes() {
@@ -90,5 +90,5 @@ fn part2(map: &Map) {
         }
     }
 
-    println!("part2: {}", antinodes.len());
+    antinodes.len()
 }

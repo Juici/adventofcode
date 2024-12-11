@@ -3,24 +3,20 @@ use anyhow::{Context, Result};
 const INPUT: &str = include_str!("./input");
 
 fn main() -> Result<()> {
-    let reports = parse_input().context("failed to parse input")?;
+    let reports = parse_input(INPUT).context("failed to parse input")?;
 
-    part1(&reports);
-    part2(&reports);
+    println!("part 1: {}", part1(&reports));
+    println!("part 2: {}", part2(&reports));
 
     Ok(())
 }
 
-fn part1(reports: &[Report]) {
-    let count = reports.iter().filter(|r| r.is_safe()).count();
-
-    println!("part 1: {count}");
+fn part1(reports: &[Report]) -> usize {
+    reports.iter().filter(|r| r.is_safe()).count()
 }
 
-fn part2(reports: &[Report]) {
-    let count = reports.iter().filter(|r| r.is_safe_dampened()).count();
-
-    println!("part 2: {count}");
+fn part2(reports: &[Report]) -> usize {
+    reports.iter().filter(|r| r.is_safe_dampened()).count()
 }
 
 struct Report {
@@ -35,7 +31,7 @@ impl Report {
     fn is_safe_dampened(&self) -> bool {
         for removed in 0..self.levels.len() {
             let levels =
-                self.levels.iter().enumerate().filter(|(i, _)| *i != removed).map(|(_, v)| *v);
+                self.levels.iter().enumerate().filter(|(i, _)| *i != removed).map(|(_, &v)| v);
 
             if is_safe(levels) {
                 return true;
@@ -72,10 +68,10 @@ fn is_safe(mut levels: impl Iterator<Item = i64>) -> bool {
     true
 }
 
-fn parse_input() -> Result<Vec<Report>> {
+fn parse_input(input: &str) -> Result<Vec<Report>> {
     let mut reports = Vec::new();
 
-    for (i, line) in INPUT.lines().enumerate() {
+    for (i, line) in input.lines().enumerate() {
         let mut levels = Vec::new();
 
         for level in line.split_whitespace() {

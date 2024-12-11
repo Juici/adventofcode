@@ -7,34 +7,30 @@ const INPUT: &str = include_str!("./input");
 fn main() -> Result<()> {
     let stones = parse_input(INPUT).context("failed to parse input")?;
 
-    part1(&stones);
-    part2(&stones);
+    println!("part 1: {}", part1(&stones));
+    println!("part 2: {}", part2(&stones));
 
     Ok(())
 }
 
-fn part1(stones: &[u64]) {
+fn part1(stones: &[u64]) -> usize {
     let mut stones = build_stone_map(stones);
 
     for _ in 0..25 {
         stones = blink(stones);
     }
 
-    let count = stones.values().sum::<usize>();
-
-    println!("part1: {count}");
+    stones.values().sum()
 }
 
-fn part2(stones: &[u64]) {
+fn part2(stones: &[u64]) -> usize {
     let mut stones = build_stone_map(stones);
 
     for _ in 0..75 {
         stones = blink(stones);
     }
 
-    let count = stones.values().sum::<usize>();
-
-    println!("part2: {count}");
+    stones.values().sum()
 }
 
 fn build_stone_map(stones: &[u64]) -> HashMap<u64, usize> {

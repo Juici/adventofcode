@@ -45,18 +45,18 @@ impl Equation {
 }
 
 fn main() -> Result<()> {
-    let equations = parse_input().context("failed to parse input")?;
+    let equations = parse_input(INPUT).context("failed to parse input")?;
 
-    part1(&equations);
-    part2(&equations);
+    println!("part 1: {}", part1(&equations));
+    println!("part 2: {}", part2(&equations));
 
     Ok(())
 }
 
-fn part1(equations: &[Equation]) {
+fn part1(equations: &[Equation]) -> u64 {
     const OPS: [Operation; 2] = [Operation::Add, Operation::Multiply];
 
-    let result = equations
+    equations
         .par_iter()
         .filter(|equation| {
             let n_ops = match equation.inputs.len().checked_sub(1) {
@@ -71,15 +71,13 @@ fn part1(equations: &[Equation]) {
                 .any(|ops| equation.apply(&ops) == equation.result)
         })
         .map(|equation| equation.result)
-        .sum::<u64>();
-
-    println!("part1: {result}");
+        .sum()
 }
 
-fn part2(equations: &[Equation]) {
+fn part2(equations: &[Equation]) -> u64 {
     const OPS: [Operation; 3] = [Operation::Add, Operation::Multiply, Operation::Concat];
 
-    let result = equations
+    equations
         .par_iter()
         .filter(|equation| {
             let n_ops = match equation.inputs.len().checked_sub(1) {
@@ -94,13 +92,11 @@ fn part2(equations: &[Equation]) {
                 .any(|ops| equation.apply(&ops) == equation.result)
         })
         .map(|equation| equation.result)
-        .sum::<u64>();
-
-    println!("part2: {result}");
+        .sum()
 }
 
-fn parse_input() -> Result<Vec<Equation>> {
-    INPUT
+fn parse_input(input: &str) -> Result<Vec<Equation>> {
+    input
         .lines()
         .enumerate()
         .map(|(i, line)| {

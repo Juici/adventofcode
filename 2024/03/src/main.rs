@@ -1,18 +1,20 @@
+use std::sync::LazyLock;
+
 use regex::Regex;
 
 const INPUT: &str = include_str!("./input");
 
 fn main() {
-    part1();
-    part2();
+    println!("part 1: {}", part1(INPUT));
+    println!("part 2: {}", part2(INPUT));
 }
 
-fn part1() {
-    let regex = Regex::new(r"mul\((\d+),(\d+)\)").unwrap();
+fn part1(input: &str) -> u64 {
+    static REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"mul\((\d+),(\d+)\)").unwrap());
 
     let mut sum = 0;
 
-    for capture in regex.captures_iter(INPUT) {
+    for capture in REGEX.captures_iter(input) {
         let (_, [left, right]) = capture.extract();
 
         let left = left.parse::<u64>().unwrap();
@@ -21,16 +23,17 @@ fn part1() {
         sum += left * right;
     }
 
-    println!("part 1: {sum}");
+    sum
 }
 
-fn part2() {
-    let regex = Regex::new(r"mul\((\d+),(\d+)\)|do\(\)|don't\(\)").unwrap();
+fn part2(input: &str) -> u64 {
+    static REGEX: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"mul\((\d+),(\d+)\)|do\(\)|don't\(\)").unwrap());
 
     let mut sum = 0;
     let mut enabled = true;
 
-    for capture in regex.captures_iter(INPUT) {
+    for capture in REGEX.captures_iter(input) {
         match &capture[0] {
             "do()" => enabled = true,
             "don't()" => enabled = false,
@@ -47,5 +50,5 @@ fn part2() {
         }
     }
 
-    println!("part 1: {sum}");
+    sum
 }

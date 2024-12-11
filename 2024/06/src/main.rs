@@ -144,23 +144,23 @@ impl Mappable for LayeredMap<'_> {
 }
 
 fn main() -> Result<()> {
-    let (map, guard) = parse_input()?;
+    let (map, guard) = parse_input(INPUT).context("failed to parse input")?;
 
-    part1(&map, guard);
-    part2(&map, guard);
+    println!("part 1: {}", part1(&map, guard));
+    println!("part 2: {}", part2(&map, guard));
 
     Ok(())
 }
 
-fn part1(map: &Map, mut guard: Guard) {
+fn part1(map: &Map, mut guard: Guard) -> usize {
     let mut coverage = HashMap::<(usize, usize), DirectionSet>::new();
 
     guard.run(map, &mut coverage);
 
-    println!("part1: {}", coverage.len());
+    coverage.len()
 }
 
-fn part2(map: &Map, guard: Guard) {
+fn part2(map: &Map, guard: Guard) -> usize {
     let in_path = {
         let mut coverage = HashMap::<(usize, usize), DirectionSet>::new();
         let mut guard = guard;
@@ -170,7 +170,7 @@ fn part2(map: &Map, guard: Guard) {
         coverage.into_par_iter().map(|(k, _)| k)
     };
 
-    let loops = in_path
+    in_path
         .filter(|&pos| {
             let mut coverage = HashMap::<(usize, usize), DirectionSet>::new();
             let mut guard = guard;
@@ -180,16 +180,14 @@ fn part2(map: &Map, guard: Guard) {
 
             guard.run(&map, &mut coverage)
         })
-        .count();
-
-    println!("part2: {loops}");
+        .count()
 }
 
-fn parse_input() -> Result<(Map, Guard)> {
+fn parse_input(input: &str) -> Result<(Map, Guard)> {
     let mut cells = Vec::new();
     let mut guard = None;
 
-    for (y, line) in INPUT.lines().enumerate() {
+    for (y, line) in input.lines().enumerate() {
         let mut row = Vec::new();
 
         for (x, c) in line.chars().enumerate() {

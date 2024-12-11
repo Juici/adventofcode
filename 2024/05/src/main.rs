@@ -2,15 +2,24 @@ use std::cmp::Ordering;
 
 use anyhow::{Context, Result};
 use petgraph::csr::Csr;
-use petgraph::Directed;
+use petgraph::{Directed, IntoWeightedEdge};
 
 const INPUT: &str = include_str!("./input");
 
 type RuleGraph = Csr<(), (), Directed, u32>;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Rule {
     before: u32,
     after: u32,
+}
+
+impl IntoWeightedEdge<()> for Rule {
+    type NodeId = u32;
+
+    fn into_weighted_edge(self) -> (Self::NodeId, Self::NodeId, ()) {
+        (self.before, self.after, ())
+    }
 }
 
 struct Update {
@@ -32,30 +41,28 @@ impl Update {
 }
 
 fn main() -> Result<()> {
-    let (rules, updates) = parse_input().context("failed to parse input")?;
+    let (mut rules, updates) = parse_input(INPUT).context("failed to parse input")?;
 
-    let mut edges = rules.into_iter().map(|rule| (rule.before, rule.after)).collect::<Vec<_>>();
-    edges.sort();
-    let graph = RuleGraph::from_sorted_edges(&edges).unwrap();
+    rules.sort_unstable();
 
-    part1(&graph, &updates);
-    part2(&graph, &updates);
+    let graph = RuleGraph::from_sorted_edges(&rules).unwrap();
+
+    println!("part 1: {}", part1(&graph, &updates));
+    println!("part 2: {}", part2(&graph, &updates));
 
     Ok(())
 }
 
-fn part1(graph: &RuleGraph, updates: &[Update]) {
-    let sum = updates
+fn part1(graph: &RuleGraph, updates: &[Update]) -> u32 {
+    updates
         .iter()
         .filter(|update| update.is_correctly_ordered(graph))
         .map(|update| update.pages[update.pages.len() / 2])
-        .sum::<u32>();
-
-    println!("part1: {sum}");
+        .sum()
 }
 
-fn part2(graph: &RuleGraph, updates: &[Update]) {
-    let sum = updates
+fn part2(graph: &RuleGraph, updates: &[Update]) -> u32 {
+    updates
         .iter()
         .filter(|update| !update.is_correctly_ordered(graph))
         .map(|update| {
@@ -87,13 +94,11 @@ fn part2(graph: &RuleGraph, updates: &[Update]) {
             pages
         })
         .map(|pages| pages[pages.len() / 2])
-        .sum::<u32>();
-
-    println!("part2: {sum}");
+        .sum()
 }
 
-fn parse_input() -> Result<(Vec<Rule>, Vec<Update>)> {
-    let mut lines = INPUT.lines().enumerate();
+fn parse_input(input: &str) -> Result<(Vec<Rule>, Vec<Update>)> {
+    let mut lines = input.lines().enumerate();
 
     let mut rules = Vec::new();
     let mut updates = Vec::new();
