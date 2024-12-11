@@ -2,8 +2,7 @@
 #![feature(iter_map_windows)]
 
 use std::collections::hash_map::Entry;
-
-use rustc_hash::FxHashMap;
+use std::collections::HashMap;
 
 const INPUT: &str = include_str!("./input");
 
@@ -74,7 +73,7 @@ fn part1() {
 
 fn part2() {
     fn chunk_appears_twice(s: &str) -> bool {
-        let mut map = FxHashMap::default();
+        let mut map = HashMap::new();
 
         for (i, chunk) in s.chars().map_windows::<_, _, 2>(|w| *w).enumerate() {
             match map.entry(chunk) {

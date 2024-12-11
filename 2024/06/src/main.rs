@@ -2,8 +2,7 @@ use std::collections::HashMap;
 use std::hash::BuildHasher;
 
 use anyhow::{Context, Result};
-use rayon::iter::{ParallelBridge, ParallelIterator};
-use rustc_hash::FxHashMap;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 
 const INPUT: &str = include_str!("./input");
 
@@ -134,14 +133,6 @@ impl Mappable for Map {
     }
 }
 
-impl Map {
-    fn iter(&self) -> impl Iterator<Item = ((usize, usize), Cell)> + '_ {
-        self.cells.iter().enumerate().flat_map(|(y, row)| {
-            row.iter().copied().enumerate().map(move |(x, cell)| ((x, y), cell))
-        })
-    }
-}
-
 impl Mappable for LayeredMap<'_> {
     fn get(&self, pos: (usize, usize)) -> Option<Cell> {
         if pos == self.obstruction {
@@ -162,7 +153,7 @@ fn main() -> Result<()> {
 }
 
 fn part1(map: &Map, mut guard: Guard) {
-    let mut coverage = FxHashMap::<(usize, usize), DirectionSet>::default();
+    let mut coverage = HashMap::<(usize, usize), DirectionSet>::new();
 
     guard.run(map, &mut coverage);
 
@@ -170,12 +161,18 @@ fn part1(map: &Map, mut guard: Guard) {
 }
 
 fn part2(map: &Map, guard: Guard) {
-    let loops = map
-        .iter()
-        .filter(|(_, cell)| matches!(cell, Cell::Floor))
-        .par_bridge()
-        .filter(|&(pos, _)| {
-            let mut coverage = FxHashMap::<(usize, usize), DirectionSet>::default();
+    let in_path = {
+        let mut coverage = HashMap::<(usize, usize), DirectionSet>::new();
+        let mut guard = guard;
+
+        guard.run(map, &mut coverage);
+
+        coverage.into_par_iter().map(|(k, _)| k)
+    };
+
+    let loops = in_path
+        .filter(|&pos| {
+            let mut coverage = HashMap::<(usize, usize), DirectionSet>::new();
             let mut guard = guard;
 
             // Add a single obstruction to the map.

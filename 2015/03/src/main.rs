@@ -1,6 +1,5 @@
+use std::collections::HashSet;
 use std::mem;
-
-use rustc_hash::FxHashSet;
 
 const INPUT: &str = include_str!("./input");
 
@@ -10,7 +9,7 @@ fn main() {
 }
 
 fn part1() {
-    let mut houses = FxHashSet::default();
+    let mut houses = HashSet::new();
 
     let mut x = 0;
     let mut y = 0;
@@ -33,7 +32,7 @@ fn part1() {
 }
 
 fn part2() {
-    let mut houses = FxHashSet::default();
+    let mut houses = HashSet::new();
 
     let mut pos1 = (0, 0);
     let mut pos2 = (0, 0);

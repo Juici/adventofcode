@@ -1,5 +1,6 @@
+use std::collections::{HashMap, HashSet};
+
 use anyhow::Result;
-use rustc_hash::{FxHashMap, FxHashSet};
 
 use self::map::Map;
 use self::vec2::Vec2;
@@ -19,13 +20,13 @@ fn main() -> Result<()> {
 }
 
 fn part1(map: &Map) {
-    let mut nodes = FxHashMap::<char, FxHashSet<Vec2>>::default();
+    let mut nodes = HashMap::<char, HashSet<Vec2>>::new();
 
     for node in map.nodes() {
         nodes.entry(node.kind).or_default().insert(node.pos);
     }
 
-    let mut antinodes = FxHashSet::default();
+    let mut antinodes = HashSet::new();
 
     for nodes in nodes.values() {
         for &start in nodes {
@@ -53,13 +54,13 @@ fn part1(map: &Map) {
 }
 
 fn part2(map: &Map) {
-    let mut nodes = FxHashMap::<char, FxHashSet<Vec2>>::default();
+    let mut nodes = HashMap::<char, HashSet<Vec2>>::new();
 
     for node in map.nodes() {
         nodes.entry(node.kind).or_default().insert(node.pos);
     }
 
-    let mut antinodes = FxHashSet::default();
+    let mut antinodes = HashSet::new();
 
     for nodes in nodes.values() {
         for &start in nodes {

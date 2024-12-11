@@ -1,7 +1,7 @@
 use std::collections::hash_map::Entry;
+use std::collections::HashMap;
 
 use anyhow::{Context, Result};
-use rustc_hash::FxHashMap;
 
 const INPUT: &str = include_str!("./input");
 
@@ -28,7 +28,7 @@ fn part1(left: &[i64], right: &[i64]) {
 }
 
 fn part2(left: &[i64], right: &[i64]) {
-    let mut counts = FxHashMap::default();
+    let mut counts = HashMap::new();
 
     for &v in right {
         match counts.entry(v) {

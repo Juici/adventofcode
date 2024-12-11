@@ -1,5 +1,6 @@
+use std::collections::HashMap;
+
 use anyhow::{Context, Result};
-use rustc_hash::FxHashMap;
 
 const INPUT: &str = include_str!("./input");
 
@@ -36,8 +37,8 @@ fn part2(stones: &[u64]) {
     println!("part2: {count}");
 }
 
-fn build_stone_map(stones: &[u64]) -> FxHashMap<u64, usize> {
-    let mut map = FxHashMap::default();
+fn build_stone_map(stones: &[u64]) -> HashMap<u64, usize> {
+    let mut map = HashMap::default();
 
     for &stone in stones {
         add_stones(&mut map, stone, 1);
@@ -46,8 +47,8 @@ fn build_stone_map(stones: &[u64]) -> FxHashMap<u64, usize> {
     map
 }
 
-fn blink(stones: FxHashMap<u64, usize>) -> FxHashMap<u64, usize> {
-    let mut new_stones = FxHashMap::default();
+fn blink(stones: HashMap<u64, usize>) -> HashMap<u64, usize> {
+    let mut new_stones = HashMap::default();
 
     for (stone, count) in stones {
         let digits = match stone {
@@ -76,7 +77,7 @@ fn blink(stones: FxHashMap<u64, usize>) -> FxHashMap<u64, usize> {
     new_stones
 }
 
-fn add_stones(stones: &mut FxHashMap<u64, usize>, stone: u64, count: usize) {
+fn add_stones(stones: &mut HashMap<u64, usize>, stone: u64, count: usize) {
     stones.entry(stone).and_modify(|v| *v += count).or_insert(count);
 }
 

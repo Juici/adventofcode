@@ -31,9 +31,6 @@ dependencies = [
 [[package]]
 name = "aoc-2015-03"
 version = "0.0.0"
-dependencies = [
- "rustc-hash",
-]
 
 [[package]]
 name = "aoc-2015-04"
@@ -47,9 +44,6 @@ dependencies = [
 [[package]]
 name = "aoc-2015-05"
 version = "0.0.0"
-dependencies = [
- "rustc-hash",
-]
 
 [[package]]
 name = "aoc-2015-06"
@@ -64,7 +58,6 @@ name = "aoc-2024-01"
 version = "0.0.0"
 dependencies = [
  "anyhow",
- "rustc-hash",
 ]
 
 [[package]]
@@ -99,7 +92,6 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "rayon",
- "rustc-hash",
 ]
 
 [[package]]
@@ -117,7 +109,6 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "rayon",
- "rustc-hash",
 ]
 
 [[package]]
@@ -126,7 +117,6 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "rayon",
- "rustc-hash",
 ]
 
 [[package]]
@@ -143,7 +133,6 @@ name = "aoc-2024-11"
 version = "0.0.0"
 dependencies = [
  "anyhow",
- "rustc-hash",
 ]
 
 [[package]]
@@ -341,12 +330,6 @@ name = "regex-syntax"
 version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
-
-[[package]]
-name = "rustc-hash"
-version = "2.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7fb8039b3032c191086b10f11f319a6e99e1e82889c5cc6046f515c9db1d497"
 
 [[package]]
 name = "typenum"

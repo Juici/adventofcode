@@ -7,4 +7,3 @@ publish.workspace = true
 [dependencies]
 anyhow.workspace = true
 rayon.workspace = true
-rustc-hash.workspace = true

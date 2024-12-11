@@ -10,11 +10,10 @@ publish = false
 anyhow = "1.0"
 rayon = "1.10"
 regex = "1.11"
-rustc-hash = "2.1"
 
 itoa = "1.0"
-petgraph = { version = "0.6.5", features = ["rayon"] }
 itertools = "0.13.0"
+petgraph = { version = "0.6.5", features = ["rayon"] }
 md-5 = "0.10.6"
 
 [profile.dev]

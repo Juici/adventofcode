@@ -3,6 +3,3 @@ name = "aoc-2015-03"
 
 edition.workspace = true
 publish.workspace = true
-
-[dependencies]
-rustc-hash.workspace = true

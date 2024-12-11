@@ -6,4 +6,3 @@ publish.workspace = true
 
 [dependencies]
 anyhow.workspace = true
-rustc-hash.workspace = true
