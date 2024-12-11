@@ -56,3 +56,28 @@ fn parse_input(input: &str) -> Result<(Vec<i32>, Vec<i32>)> {
 
     Ok((left, right))
 }
+
+#[cfg(test)]
+mod example {
+    const EXAMPLE: &str = include_str!("./example");
+
+    #[test]
+    fn part1() {
+        let (mut left, mut right) = super::parse_input(EXAMPLE).unwrap();
+
+        left.sort_unstable();
+        right.sort_unstable();
+
+        assert_eq!(super::part1(&left, &right), 11);
+    }
+
+    #[test]
+    fn part2() {
+        let (mut left, mut right) = super::parse_input(EXAMPLE).unwrap();
+
+        left.sort_unstable();
+        right.sort_unstable();
+
+        assert_eq!(super::part2(&left, &right), 31);
+    }
+}

@@ -87,3 +87,22 @@ fn parse_input(input: &str) -> Result<Vec<Report>> {
 
     Ok(reports)
 }
+
+#[cfg(test)]
+mod example {
+    const EXAMPLE: &str = include_str!("./example");
+
+    #[test]
+    fn part1() {
+        let reports = super::parse_input(EXAMPLE).unwrap();
+
+        assert_eq!(super::part1(&reports), 2);
+    }
+
+    #[test]
+    fn part2() {
+        let reports = super::parse_input(EXAMPLE).unwrap();
+
+        assert_eq!(super::part2(&reports), 4);
+    }
+}
