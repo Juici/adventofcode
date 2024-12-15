@@ -1,5 +1,3 @@
-#![feature(iter_array_chunks)]
-
 use std::collections::HashSet;
 use std::str::FromStr;
 use std::sync::LazyLock;
