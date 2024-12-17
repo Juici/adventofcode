@@ -16,6 +16,7 @@ itoa = "1.0"
 itertools = "0.13.0"
 petgraph = { version = "0.6.5", features = ["rayon"] }
 md-5 = "0.10.6"
+z3 = "0.12.1"
 
 [profile.dev]
 opt-level = 1

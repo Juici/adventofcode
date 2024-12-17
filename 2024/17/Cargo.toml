@@ -1,0 +1,13 @@
+[package]
+name = "aoc-2024-17"
+
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+rayon.workspace = true
+regex.workspace = true
+
+itoa.workspace = true
+z3.workspace = true
