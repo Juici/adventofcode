@@ -56,10 +56,7 @@ impl Cpu {
         }
     }
 
-    fn run<F>(&mut self, rom: &[u3], is_valid: F) -> Option<Vec<u3>>
-    where
-        F: Fn(&[u3]) -> bool,
-    {
+    fn run(&mut self, rom: &[u3]) -> Vec<u3> {
         let mut output = Vec::new();
 
         while let Some(opcode) = rom.get(self.pc) {
@@ -82,7 +79,6 @@ impl Cpu {
                     if self.reg_a == 0 {
                         continue;
                     }
-
                     self.pc = usize::from(operand.to_u8());
                 }
                 Opcode::Bxc => {
@@ -90,10 +86,6 @@ impl Cpu {
                 }
                 Opcode::Out => {
                     output.push(self.combo_operand_u3(operand));
-
-                    if !is_valid(&output) {
-                        return None;
-                    }
                 }
                 Opcode::Bdv => {
                     self.reg_b = self.reg_a >> self.combo_operand(operand);
@@ -104,7 +96,7 @@ impl Cpu {
             }
         }
 
-        Some(output)
+        output
     }
 }
 
@@ -118,7 +110,7 @@ fn main() -> Result<()> {
 }
 
 fn part1(mut cpu: Cpu, rom: &[u3]) -> String {
-    render_values(cpu.run(rom, |_| true).unwrap())
+    render_values(cpu.run(rom))
 }
 
 fn part2(cpu: Cpu, rom: &[u3]) -> Int {
@@ -127,11 +119,11 @@ fn part2(cpu: Cpu, rom: &[u3]) -> Int {
     let ctx = z3::Context::new(&z3::Config::new());
     let opt = z3::Optimize::new(&ctx);
 
-    let s = BV::new_const(&ctx, "a", Int::BITS);
+    let s = BV::new_const(&ctx, "a", 64);
 
     let mut a = s.clone();
-    let mut b = BV::from_u64(&ctx, cpu.reg_b, Int::BITS);
-    let mut c = BV::from_u64(&ctx, cpu.reg_c, Int::BITS);
+    let mut b = BV::from_u64(&ctx, cpu.reg_b, 64);
+    let mut c = BV::from_u64(&ctx, cpu.reg_c, 64);
 
     let mut pc = 0;
 
@@ -142,7 +134,7 @@ fn part2(cpu: Cpu, rom: &[u3]) -> Int {
                 v if v == u3!(5) => b.clone(),
                 v if v == u3!(6) => c.clone(),
                 v if v == u3!(7) => panic!("reserved combo operand: {v:#x}"),
-                v => BV::from_u64(&ctx, v.to_u8() as _, Int::BITS),
+                v => BV::from_u64(&ctx, v.to_u8().into(), 64),
             }
         };
     }
@@ -160,14 +152,14 @@ fn part2(cpu: Cpu, rom: &[u3]) -> Int {
                 a = a.bvlshr(&combo_operand!(operand));
             }
             Opcode::Bxl => {
-                b ^= BV::from_u64(&ctx, operand.to_u8() as _, Int::BITS);
+                b ^= BV::from_u64(&ctx, operand.to_u8().into(), 64);
             }
             Opcode::Bst => {
-                b = combo_operand!(operand).bvand(&BV::from_u64(&ctx, 7, Int::BITS));
+                b = combo_operand!(operand) & BV::from_u64(&ctx, 7, 64);
             }
             Opcode::Jnz => {
                 if next_out.peek().is_none() {
-                    opt.assert(&a._eq(&BV::from_u64(&ctx, 0, Int::BITS)));
+                    opt.assert(&a._eq(&BV::from_u64(&ctx, 0, 64)));
                     break;
                 }
                 pc = usize::from(operand.to_u8());
@@ -176,10 +168,10 @@ fn part2(cpu: Cpu, rom: &[u3]) -> Int {
                 b ^= &c;
             }
             Opcode::Out => {
-                let out = &b & BV::from_u64(&ctx, 7, Int::BITS);
                 let expected = next_out.next().expect("no more rom");
+                let out = combo_operand!(operand) & BV::from_u64(&ctx, 7, 64);
 
-                opt.assert(&out._eq(&BV::from_u64(&ctx, expected.to_u8() as _, Int::BITS)));
+                opt.assert(&out._eq(&BV::from_u64(&ctx, expected.to_u8().into(), 64)));
             }
             Opcode::Bdv => {
                 b = a.bvlshr(&combo_operand!(operand));
@@ -279,7 +271,6 @@ mod example2 {
     }
 
     #[test]
-    #[ignore = "failing as unsat"]
     fn part2() {
         let (cpu, rom) = super::parse_input(EXAMPLE).unwrap();
 
